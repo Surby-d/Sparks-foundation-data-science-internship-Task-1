@@ -1,0 +1,67 @@
+# Importing Libraries
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Importing the Dataset
+
+dataset = pd.read_csv('https://raw.githubusercontent.com/AdiPersonalWorks/Random/master/student_scores%20-%20student_scores.csv')
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, 1].values
+
+# Plotting the actual dataset
+
+plt.scatter(X, y, color="blue")
+plt.title("Hours studied vs Scores")
+plt.xlabel("Hours studied")
+plt.ylabel("Scores")
+plt.show()
+
+# Splitting the dataset into training and test set
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+
+# Training the model
+
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Visualising the Training set results
+
+plt.scatter(X_train, y_train, color="blue")
+plt.plot(X_train, regressor.predict(X_train), color="green")
+plt.title("Study hours Vs Scores")
+plt.xlabel("Hours of Study")
+plt.ylabel("Scores")
+plt.show()
+
+# Visualising the Test set results
+
+plt.scatter(X_test, y_test, color="blue")
+plt.plot(X_train, regressor.predict(X_train), color="green")
+plt.title("Study hours Vs Scores")
+plt.xlabel("Hours of Study")
+plt.ylabel("Scores")
+plt.show()
+
+# Predicting the results
+
+Hours_studied = 9.25
+pred = regressor.predict([[Hours_studied]])
+print("Hours studied = {}".format(Hours_studied))
+print("Predicted Score = {}".format(pred[0]))
+
+# Comparing with the actual results
+
+deviation = pd.DataFrame({'Actual': y_test, 'Predicted': regressor.predict(X_test)}) 
+deviation
+
+# Evaluating the model
+
+from sklearn.metrics import r2_score
+print("Regression Score: ", r2_score(y_test, regressor.predict(X_test)))
